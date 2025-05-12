@@ -1,0 +1,64 @@
+# Dockerfile entorn GUI con XFCE, VNC, VSCode, Python y SSH
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DISPLAY=:1
+ENV RESOLUTION=1920x1080x24
+
+# Dependencies basiques
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    curl \
+    wget \
+    git \
+    sudo
+
+# Instal·lar XCFE
+RUN apt-get install -y \
+    xfce4 \
+    xfce4-goodies \
+    x11vnc \
+    xvfb \
+    dbus-x11 \
+    xterm \
+    tigervnc-standalone-server
+
+# Python 
+RUN apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    python3-dev
+
+# Visual Studio Code
+RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && \
+    install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/ && \
+    sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list' && \
+    apt-get update && \
+    apt-get install -y code
+
+# SSH server
+RUN apt-get install -y openssh-server && \
+    mkdir /var/run/sshd && \
+    echo 'root:password' | chpasswd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Configurar VNC
+COPY vnc-config/passwd /root/.vnc/passwd
+COPY vnc-config/xstartup /root/.vnc/xstartup
+RUN chmod 600 /root/.vnc/passwd && \
+    chmod +x /root/.vnc/xstartup
+
+# Script de inici
+COPY xfce-vnc-startup.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/xfce-vnc-startup.sh
+
+# Neteja
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Ports
+EXPOSE 5901 22
+
+# Comanda de inici
+CMD ["/usr/local/bin/xfce-vnc-startup.sh"]
