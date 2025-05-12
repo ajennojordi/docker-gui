@@ -1,0 +1,7 @@
+#Comanda per fer el build:
+
+docker build -t ubuntu-gui -f dockerfileGUI .
+
+#Comanda per fer el run:
+
+docker run -d -p 5901:5901 -p 2222:22 --name ubuntu-gui-container --shm-size=1g ubuntu-gui
