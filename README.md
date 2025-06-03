@@ -5,11 +5,13 @@
 -VirtualBox (per redirecció de ports en cas necessari)
 -Client VNC (Remmina, TigerVNC, etc.)
 
-##Construir la imatge
+###Construir la imatge
 
-```bash
-docker build -t ubuntu-gui .
+# Donar permisos al script
+chmod +x xfce-vnc-startup.sh
 
+# Executar el script
+./xfce-vnc-startup.sh
 
 #Informació bàsica
 
