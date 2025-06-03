@@ -9,3 +9,11 @@
 
 ```bash
 docker build -t ubuntu-gui .
+
+
+#Informació bàsica
+
+-usuari: docker
+-contrasenya: password
+-port SSH: 2222
+-port VNC: 5901
