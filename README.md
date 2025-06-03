@@ -7,15 +7,18 @@
 
 ###Construir la imatge
 
-#Donar permisos al script
+###Donar permisos al script
 chmod +x xfce-vnc-startup.sh
 
-#Executar el script
+###Executar el script
 ./xfce-vnc-startup.sh
 
-# Informació bàsica
+### Informació bàsica
 
 -usuari: docker
+
 -contrasenya: password
+
 -port SSH: 2222
+
 -port VNC: 5901
